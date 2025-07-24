@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "TestJavaFX",
+      "request": "launch",
+      "mainClass": "TestJavaFX",
+      "projectName": "library-management_c3a87c67"
+    },
+    {
+      "type": "java",
+      "name": "Run JavaFX App",
+      "request": "launch",
+      "mainClass": "view.TestJavaFX",
+      "projectName": "src",
+      "vmArgs": "--module-path lib --add-modules javafx.controls,javafx.fxml"
+    }
+  ]
+}
