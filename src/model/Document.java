@@ -1,31 +1,72 @@
-
-
 package model;
 
 public class Document {
     private int id;
     private String title;
     private String author;
+    private String isbn;
+    private String category;
+    private int quantity;
 
-    public Document() {}
+    public Document() {
+    }
 
-    public Document(int id, String title, String author) {
-        this.id     = id;
-        this.title  = title;
+    public Document(int id, String title, String author, String isbn, String category, int quantity) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isbn = isbn;
+        this.category = category;
+        this.quantity = quantity;
+    }
+
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+    // Setter
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
         this.author = author;
     }
 
-    // getters / setters
-    public int getId()             { return id; }
-    public void setId(int id)      { this.id = id; }
-    public String getTitle()       { return title; }
-    public void setTitle(String t) { this.title = t; }
-    public String getAuthor()      { return author; }
-    public void setAuthor(String a){ this.author = a; }
-
-    @Override
-    public String toString() {
-        return "[" + id + "] " + title + " — " + author;
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
-}
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+}

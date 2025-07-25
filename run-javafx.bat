@@ -8,8 +8,10 @@ for /R src %%f in (*.java) do (
 )
 
 rem Biên dịch toàn bộ
-javac --module-path lib --add-modules javafx.controls -cp lib\postgresql-42.7.3.jar -d out %SOURCES%
+javac --module-path lib --add-modules javafx.controls ^
+-cp "lib\postgresql-42.7.3.jar;lib\gson-2.10.1.jar" -d out %SOURCES%
 
 rem Chạy chương trình
-java -Djava.net.preferIPv4Stack=true --module-path lib --add-modules javafx.controls -cp "out;lib\postgresql-42.7.3.jar" app.Main
+java --module-path lib --add-modules javafx.controls ^
+-cp "out;lib\postgresql-42.7.3.jar;lib\gson-2.10.1.jar" app.Main
 pause
