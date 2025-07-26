@@ -39,12 +39,31 @@ public class SupabaseClient {
     public static int post(String path, String jsonBody) throws IOException {
         HttpURLConnection conn = setupConnection(path, "POST");
 
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/json");
+
         try (OutputStream os = conn.getOutputStream()) {
             os.write(jsonBody.getBytes());
             os.flush();
         }
 
-        return conn.getResponseCode();
+        int responseCode = conn.getResponseCode();
+
+        if (responseCode != 201) {
+            System.out.println(" POST thất bại với mã: " + responseCode);
+
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getErrorStream()))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    response.append(line.trim());
+                }
+                System.out.println(" Phản hồi lỗi từ Supabase: " + response);
+            }
+        }
+
+        return responseCode;
     }
 
     public static int patch(String path, String jsonBody) throws Exception {
@@ -64,11 +83,45 @@ public class SupabaseClient {
             os.flush();
         }
 
-        return conn.getResponseCode();
+        int responseCode = conn.getResponseCode();
+
+        if (responseCode != 204) {
+            System.out.println(" PATCH thất bại với mã: " + responseCode);
+
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getErrorStream()))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    response.append(line.trim());
+                }
+                System.out.println(" Phản hồi lỗi từ Supabase (PATCH): " + response);
+            }
+        }
+
+        return responseCode;
     }
 
     public static int delete(String path) throws IOException {
         HttpURLConnection conn = setupConnection(path, "DELETE");
-        return conn.getResponseCode();
+
+        int responseCode = conn.getResponseCode();
+
+        if (responseCode != 204) {
+            System.out.println(" DELETE thất bại với mã: " + responseCode);
+
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(conn.getErrorStream()))) {
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    response.append(line.trim());
+                }
+                System.out.println(" Phản hồi lỗi từ Supabase (DELETE): " + response);
+            }
+        }
+
+        return responseCode;
     }
+
 }

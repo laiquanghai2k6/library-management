@@ -5,18 +5,18 @@ public class Document {
     private String title;
     private String author;
     private String isbn;
-    private String category;
+    private int category_id;
     private int quantity;
 
     public Document() {
     }
 
-    public Document(int id, String title, String author, String isbn, String category, int quantity) {
+    public Document(int id, String title, String author, String isbn, int category_id, int quantity) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.category = category;
+        this.category_id = category_id;
         this.quantity = quantity;
     }
 
@@ -37,13 +37,14 @@ public class Document {
         return isbn;
     }
 
-    public String getCategory() {
-        return category;
+    public int getCategory_Id() {
+        return category_id;
     }
 
     public int getQuantity() {
         return quantity;
     }
+
     // Setter
     public void setId(int id) {
         this.id = id;
@@ -61,12 +62,24 @@ public class Document {
         this.isbn = isbn;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategory(int category_id) {
+        this.category_id = category_id;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", isbn='" + isbn + '\'' +
+                ", quantity=" + quantity +
+                ", category='" + category_id + '\'' +
+                '}';
     }
 
 }
