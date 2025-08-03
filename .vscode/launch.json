@@ -5,6 +5,13 @@
       "type": "java",
       "name": "TestJavaFX",
       "request": "launch",
+      "mainClass": "view.TestJavaFX",
+      "projectName": "library-management_7e5edbb0"
+    },
+    {
+      "type": "java",
+      "name": "TestJavaFX",
+      "request": "launch",
       "mainClass": "TestJavaFX",
       "projectName": "library-management_c3a87c67"
     },
