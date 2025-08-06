@@ -19,6 +19,4 @@ public class UserController {
     public boolean addUser(User user) {
         return userService.addUser(user);
     }
-
-
 }
