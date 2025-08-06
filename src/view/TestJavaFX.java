@@ -11,8 +11,10 @@ public class TestJavaFX extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("UI.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 600, 600);
-            primaryStage.setTitle("Hello JavaFX");
+            Scene scene = new Scene(root);
+            /* String css = this.getClass().getResource("application.css").toExternalForm();
+            scene.getStylesheets().add(css); */
+            primaryStage.setTitle("Phần mềm quản lí thư viện");
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch(Exception e) {
