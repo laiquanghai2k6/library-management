@@ -1,5 +1,7 @@
 package view;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -7,31 +9,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-public class UIController {
-
+public class UI2 {
     private Stage stage;
     private Scene scene;
     private Parent root;
 
-    public void loadUserView(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("/view/UserView.fxml"));
-        switchScene(event, root);
-    }
-
-    public void loadDocumentView(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("/view/DocumentView.fxml"));
-        switchScene(event, root);
-    }
-
     public void loadBorrowView(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("/view/BorrowViewForAdmin.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/view/BorrowViewForUser.fxml"));
         switchScene(event, root);
     }
 
     public void loadReturnView(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("/view/ReturnViewForAdmin.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/view/ReturnViewForUser.fxml"));
         switchScene(event, root);
     }
 

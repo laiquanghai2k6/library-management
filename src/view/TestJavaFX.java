@@ -9,7 +9,7 @@ public class TestJavaFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("UI.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Role.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             /* String css = this.getClass().getResource("application.css").toExternalForm();
