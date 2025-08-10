@@ -16,8 +16,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableView;
 
 public class DocumentView implements Initializable {
 
@@ -25,16 +28,47 @@ public class DocumentView implements Initializable {
     private ListView<String> myListView;
 
     @FXML
-    private TextField name;
+    private TextField title;
 
     @FXML
-    private TextField email;
+    private TextField author;
 
     @FXML
-    private Button addUser;
+    private TextField isbn;
+
+    @FXML
+    private TextField categoryId;
+
+    @FXML
+    private TextField quantity;
+
+    @FXML
+    private Button addDocs;
 
     @FXML
     private Button updateButton;
+
+    @FXML
+    private TableColumn<Document, Integer> idColumn;
+
+    @FXML
+    private TableColumn<Document, String> titleColumn;
+
+    @FXML
+    private TableColumn<Document, String> authorColumn;
+
+    @FXML
+    private TableColumn<Document, String> isbnColumn;
+
+    @FXML
+    private TableColumn<Document, String> categoryIDColumn;
+
+    @FXML
+    private TableColumn<Document, String> quantityColumn;
+
+    @FXML
+    private TableView<Document> docsTable;
+
 
     int id = 0;
 
@@ -46,11 +80,18 @@ public class DocumentView implements Initializable {
     }
 
     private void loadDocsToListView() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
+        categoryIDColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
+        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+
         List<Document> docs = docController.getAllDocuments();
-        
         for (int i = id; i < docs.size(); i++) {
-            myListView.getItems().add(docs.get(i).toString()); 
+            docsTable.getItems().add(docs.get(i)); 
         }
+
         id = docs.size();
     }
 
