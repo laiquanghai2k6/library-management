@@ -1,9 +1,0 @@
-/* luôn luôn copy cái này sang out/view */
-.root {
-    /* -fx-background-image: url("/assets/background.jpg"); */
-    -fx-background-size: cover;
-    -fx-background-position: center;
-}
-.label {
-    -fx-text-fill: black;
-}

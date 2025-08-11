@@ -3,11 +3,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0"
+<AnchorPane prefHeight="500.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/24.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="view.ReturnView">
@@ -20,7 +23,6 @@
         </font>
     </Label>
 
-    <!-- Form nhập liệu -->
     <Label text="Tên sách:" AnchorPane.topAnchor="80" AnchorPane.leftAnchor="40" />
     <TextField fx:id="bookNameField" AnchorPane.topAnchor="75" AnchorPane.leftAnchor="120" prefWidth="350" />
 
@@ -30,11 +32,19 @@
     <Label text="Ngày trả:" AnchorPane.topAnchor="160" AnchorPane.leftAnchor="40" />
     <DatePicker fx:id="returnDatePicker" AnchorPane.topAnchor="155" AnchorPane.leftAnchor="120" prefWidth="200" />
 
-    <!-- Nút xác nhận -->
-    <Button text="Xác nhận trả sách" AnchorPane.topAnchor="210" AnchorPane.leftAnchor="120" 
+    <Label text="Đánh giá:" AnchorPane.topAnchor="200" AnchorPane.leftAnchor="40" />
+    <TextField fx:id="ratingField" promptText="Sách tuyệt quá" AnchorPane.topAnchor="195" AnchorPane.leftAnchor="120" prefWidth="350" />
+
+    <Button text="Xác nhận trả sách" AnchorPane.topAnchor="240" AnchorPane.leftAnchor="120" 
             prefWidth="150" prefHeight="35" mnemonicParsing="false" fx:id="confirmReturnBtn" />
 
-    <!-- Nút quay lại -->
     <Button text="Quay lại" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" prefWidth="100" prefHeight="30" onAction="#Back" />
 
+    <Label text="Danh sách đánh giá" AnchorPane.topAnchor="290" AnchorPane.leftAnchor="40" />
+    <ScrollPane fx:id="reviewScrollPane" AnchorPane.topAnchor="315" AnchorPane.leftAnchor="40" AnchorPane.rightAnchor="40" AnchorPane.bottomAnchor="60" prefHeight="140" prefWidth="520" >
+        <content>
+            <VBox fx:id="reviewListVBox" spacing="5" />
+        </content>
+    </ScrollPane>
+    
 </AnchorPane>

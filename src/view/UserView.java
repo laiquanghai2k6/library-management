@@ -20,6 +20,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import controller.UserController;
 import java.net.URL;
+import javafx.util.Callback;
+import javafx.scene.control.TableCell;
+import javafx.scene.text.Text;
+import javafx.scene.control.Control;
 
 public class UserView implements Initializable {
 
@@ -49,7 +53,6 @@ public class UserView implements Initializable {
     @FXML
     private TableColumn<User, String> emailColumn;
 
-
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -59,16 +62,14 @@ public class UserView implements Initializable {
         switchScene(event, root);
     }
 
-
     private void switchScene(ActionEvent event, Parent view) {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(view);
-        //Thêm background
+        // Thêm background
         scene.getStylesheets().add(getClass().getResource("/view/application.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
-
 
     @FXML
     void submit(ActionEvent event) {
@@ -82,18 +83,44 @@ public class UserView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         loadUsersToListView();
     }
 
     @FXML
     public void loadUsersToListView() {
+        nameColumn.setCellFactory(new Callback<TableColumn<User, String>, TableCell<User, String>>() {
+            @Override
+            public TableCell<User, String> call(TableColumn<User, String> param) {
+                return new TableCell<User, String>() {
+                    private final Text text = new Text();
+
+                    {
+                        text.wrappingWidthProperty().bind(param.widthProperty().subtract(10));
+                        setPrefHeight(Control.USE_COMPUTED_SIZE);
+                    }
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            text.setText(item);
+                            setGraphic(text);
+                        }
+                    }
+                };
+            }
+        });
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         List<User> users = userController.getAllUsers();
         for (int i = 0; i < users.size(); i++) {
-            userTable.getItems().add(users.get(i)); 
+            userTable.getItems().add(users.get(i));
         }
 
     }
