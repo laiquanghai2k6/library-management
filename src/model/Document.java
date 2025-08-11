@@ -1,17 +1,19 @@
 package model;
 
+import java.util.UUID;
+
 public class Document {
     private int id;
     private String title;
     private String author;
     private String isbn;
-    private int category_id;
+    private UUID category_id;
     private int quantity;
 
     public Document() {
     }
 
-    public Document(int id, String title, String author, String isbn, int category_id, int quantity) {
+    public Document(int id, String title, String author, String isbn, UUID category_id, int quantity) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -37,7 +39,7 @@ public class Document {
         return isbn;
     }
 
-    public int getCategory_Id() {
+    public UUID getCategoryId() {
         return category_id;
     }
 
@@ -62,7 +64,7 @@ public class Document {
         this.isbn = isbn;
     }
 
-    public void setCategory(int category_id) {
+    public void setCategoryId(UUID category_id) {
         this.category_id = category_id;
     }
 

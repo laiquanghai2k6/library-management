@@ -30,10 +30,10 @@ public class ReturnView {
         label.setStyle(
                 "-fx-font-size: 14px; " +
                         "-fx-padding: 3 0 3 0; " +
-                        "-fx-text-fill: black; " + // màu chữ đen
-                        "-fx-border-color: white; " + // viền trắng
-                        "-fx-border-width: 1px; " + // độ dày viền
-                        "-fx-border-radius: 3px;" // bo góc viền (tuỳ chọn)
+                        "-fx-text-fill: black; " + 
+                        "-fx-border-color: white; " + 
+                        "-fx-border-width: 1px; " + 
+                        "-fx-border-radius: 3px;" 
         );
         reviewListVBox.getChildren().add(label);
     }

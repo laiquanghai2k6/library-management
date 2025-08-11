@@ -1,20 +1,22 @@
 package model;
 
+import java.util.UUID;
+
 public class Category {
-    private int id;
+    private UUID id;
     private String name;
 
     public Category() {}
-    public Category(int id, String name) {
+    public Category(UUID id, String name) {
         this.id = id;
         this.name = name;
     }
 
     // Getter
-    public int getId() { return id; }
+    public UUID getId() { return id; }
     public String getName() { return name; }
 
     // Setter
-    public void setId(int id) { this.id = id; }
+    public void setId(UUID id) { this.id = id; }
     public void setName(String name) { this.name = name; }
 }

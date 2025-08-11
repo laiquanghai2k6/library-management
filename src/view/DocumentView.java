@@ -21,6 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.IntegerStringConverter;
 
 public class DocumentView implements Initializable {
 
@@ -61,25 +63,22 @@ public class DocumentView implements Initializable {
     private TableColumn<Document, String> isbnColumn;
 
     @FXML
-    private TableColumn<Document, String> categoryIDColumn;
+    private TableColumn<Document, Integer> categoryIDColumn;
 
     @FXML
-    private TableColumn<Document, String> quantityColumn;
+    private TableColumn<Document, Integer> quantityColumn;
 
     @FXML
     private TableView<Document> docsTable;
 
-
     int id = 0;
-
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
     private final DocumentController docController = new DocumentController();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadDocsToListView();
-    }
-
-    private void loadDocsToListView() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -87,23 +86,68 @@ public class DocumentView implements Initializable {
         categoryIDColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
-        List<Document> docs = docController.getAllDocuments();
-        for (int i = id; i < docs.size(); i++) {
-            docsTable.getItems().add(docs.get(i)); 
-        }
+        docsTable.setEditable(true);
+        idColumn.setEditable(false); // k cho chỉnh id
 
-        id = docs.size();
+        // Cho phép chỉnh sửa từng cột và xử lý update khi commit
+        titleColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        titleColumn.setOnEditCommit(event -> {
+            Document doc = event.getRowValue();
+            doc.setTitle(event.getNewValue());
+            docController.updateDocument(doc);
+            reloadTable();
+        });
+
+        authorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        authorColumn.setOnEditCommit(event -> {
+            Document doc = event.getRowValue();
+            doc.setAuthor(event.getNewValue());
+            docController.updateDocument(doc);
+            reloadTable();
+        });
+
+        isbnColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        isbnColumn.setOnEditCommit(event -> {
+            Document doc = event.getRowValue();
+            doc.setIsbn(event.getNewValue());
+            docController.updateDocument(doc);
+            reloadTable();
+        });
+
+        categoryIDColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        categoryIDColumn.setOnEditCommit(event -> {
+            Document doc = event.getRowValue();
+            // doc.setCategoryId(event.getNewValue());
+            docController.updateDocument(doc);
+            reloadTable();
+        });
+
+        quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        quantityColumn.setOnEditCommit(event -> {
+            Document doc = event.getRowValue();
+            // doc.setQuantity(event.getNewValue());
+            docController.updateDocument(doc);
+            reloadTable();
+        });
+
+        // Load dữ liệu lần đầu
+        loadDocsToListView();
     }
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    private void loadDocsToListView() {
+        docsTable.getItems().clear();
+        List<Document> docs = docController.getAllDocuments();
+        docsTable.getItems().addAll(docs);
+    }
+
+    private void reloadTable() {
+        loadDocsToListView();
+    }
 
     public void Back(ActionEvent event) throws IOException {
         root = FXMLLoader.load(getClass().getResource("/view/UI.fxml"));
         switchScene(event, root);
     }
-
 
     private void switchScene(ActionEvent event, Parent view) {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

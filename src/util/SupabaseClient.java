@@ -2,7 +2,11 @@ package util;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.stream.Collectors;
 
 public class SupabaseClient {
@@ -67,40 +71,25 @@ public class SupabaseClient {
     }
 
     public static int patch(String path, String jsonBody) throws Exception {
-        URL url = new URL(SUPABASE_URL + path);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    HttpClient client = HttpClient.newHttpClient();
 
-        conn.setRequestMethod("POST"); // Trick: POST + override PATCH
-        conn.setRequestProperty("X-HTTP-Method-Override", "PATCH");
+    HttpRequest request = HttpRequest.newBuilder()
+        .uri(URI.create(SUPABASE_URL + path))
+        .header("apikey", SUPABASE_API_KEY)
+        .header("Authorization", "Bearer " + SUPABASE_API_KEY)
+        .header("Content-Type", "application/json")
+        .method("PATCH", HttpRequest.BodyPublishers.ofString(jsonBody))
+        .build();
 
-        conn.setRequestProperty("apikey", SUPABASE_API_KEY);
-        conn.setRequestProperty("Authorization", "Bearer " + SUPABASE_API_KEY);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setDoOutput(true);
-
-        try (OutputStream os = conn.getOutputStream()) {
-            os.write(jsonBody.getBytes());
-            os.flush();
-        }
-
-        int responseCode = conn.getResponseCode();
-
-        if (responseCode != 204) {
-            System.out.println(" PATCH thất bại với mã: " + responseCode);
-
-            try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(conn.getErrorStream()))) {
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = br.readLine()) != null) {
-                    response.append(line.trim());
-                }
-                System.out.println(" Phản hồi lỗi từ Supabase (PATCH): " + response);
-            }
-        }
-
-        return responseCode;
+    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response);
+    if (response.statusCode() < 200 || response.statusCode() >= 300) {
+        System.out.println(" PATCH thất bại với mã: " + response.statusCode());
+        System.out.println(" Phản hồi lỗi từ Supabase (PATCH): " + response.body());
     }
+
+    return response.statusCode();
+}
 
     public static int delete(String path) throws IOException {
         HttpURLConnection conn = setupConnection(path, "DELETE");
