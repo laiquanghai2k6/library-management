@@ -100,7 +100,7 @@ public class DocumentView implements Initializable {
     private Parent root;
 
     public void Back(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource("/view/UIController.fxml"));
+        root = FXMLLoader.load(getClass().getResource("/view/UI.fxml"));
         switchScene(event, root);
     }
 
@@ -108,6 +108,7 @@ public class DocumentView implements Initializable {
     private void switchScene(ActionEvent event, Parent view) {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(view);
+        scene.getStylesheets().add(getClass().getResource("/view/application.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

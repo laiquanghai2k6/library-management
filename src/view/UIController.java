@@ -38,6 +38,8 @@ public class UIController {
     private void switchScene(ActionEvent event, Parent view) {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(view);
+        scene.getStylesheets().add(getClass().getResource("/view/application.css").toExternalForm());
+
         stage.setScene(scene);
         stage.show();
     }
