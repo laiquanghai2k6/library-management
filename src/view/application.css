@@ -1,0 +1,15 @@
+.root {
+    -fx-background-image: url("/assets/background.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* lớp phủ đen mờ 50% */
+    -fx-background-blend-mode: multiply;
+    -fx-pref-width: 600px;
+    -fx-pref-height: 450px;
+}
+
+.label {
+    -fx-text-fill: white; /* hoặc black tùy nền */
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 2,0,0,1 );
+}
