@@ -41,7 +41,7 @@
     <Label text="ISBN:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="10" />
     <TextField fx:id="isbnField" AnchorPane.topAnchor="110" AnchorPane.leftAnchor="70" prefWidth="150" />
 
-    <Label text="ID Danh mục:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="230" />
+    <Label text="Danh mục:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="230" />
     <TextField fx:id="categoryIDField" AnchorPane.topAnchor="110" AnchorPane.leftAnchor="310" prefWidth="80" />
 
     <Label text="Số lượng:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="410" />
@@ -68,7 +68,7 @@
             <TableColumn fx:id="titleColumn" text="Tiêu đề" prefWidth="140" />
             <TableColumn fx:id="authorColumn" text="Tác giả" prefWidth="140" />
             <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="100" />
-            <TableColumn fx:id="categoryIDColumn" text="ID Danh mục" prefWidth="80" />
+            <TableColumn fx:id="categoryIDColumn" text="Danh mục" prefWidth="80" />
             <TableColumn fx:id="quantityColumn" text="Số lượng" prefWidth="80" />
         </columns>
     </TableView>

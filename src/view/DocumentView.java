@@ -39,7 +39,7 @@ public class DocumentView implements Initializable {
     private TextField isbn;
 
     @FXML
-    private TextField categoryId;
+    private TextField category;
 
     @FXML
     private TextField quantity;
@@ -63,7 +63,7 @@ public class DocumentView implements Initializable {
     private TableColumn<Document, String> isbnColumn;
 
     @FXML
-    private TableColumn<Document, Integer> categoryIDColumn;
+    private TableColumn<Document, Integer> categoryColumn;
 
     @FXML
     private TableColumn<Document, Integer> quantityColumn;
@@ -83,7 +83,7 @@ public class DocumentView implements Initializable {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
-        categoryIDColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         docsTable.setEditable(true);
@@ -114,8 +114,8 @@ public class DocumentView implements Initializable {
             reloadTable();
         });
 
-        categoryIDColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        categoryIDColumn.setOnEditCommit(event -> {
+        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        categoryColumn.setOnEditCommit(event -> {
             Document doc = event.getRowValue();
             // doc.setCategoryId(event.getNewValue());
             docController.updateDocument(doc);
