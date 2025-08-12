@@ -41,7 +41,7 @@
     <!-- buttons -->
     <Button fx:id="addDocs" onAction="#add" prefHeight="30" prefWidth="100" text="Thêm" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="150" />
 
-    <Button fx:id="clearFields" onAction="#remove" prefHeight="30" prefWidth="100" text="Xóa" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="150" />
+    <Button fx:id="clearFields" prefHeight="30" prefWidth="100" text="Xóa" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="150" />
 
     <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Danh sách tài liệu" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="190" />
 
