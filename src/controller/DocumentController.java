@@ -13,10 +13,6 @@ public class DocumentController {
         this.documentService = new DocumentService();
     }
 
-    public Document getDocumentById(UUID id){
-        return documentService.getDocumentById(id);
-    }
-
     public List<Document> getAllDocuments() {
         return documentService.getAllDocuments();
     }
@@ -29,7 +25,7 @@ public class DocumentController {
         return documentService.updateDocument(doc);
     }
 
-    public boolean deleteDocument(int id) {
+    public boolean deleteDocument(UUID id) {
         return documentService.deleteDocument(id);
     }
 }

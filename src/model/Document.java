@@ -13,10 +13,11 @@ public class Document {
     public Document() {
     }
 
-    public Document(String title, String author, String isbn, int quantity) {
+    public Document(String title, String author, String isbn, UUID category_id, int quantity) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
+        this.category_id = category_id;
         this.quantity = quantity;
     }
 

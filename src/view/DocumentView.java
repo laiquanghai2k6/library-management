@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import model.Document;
-import model.User;
 import controller.DocumentController;
 import java.net.URL;
 
@@ -26,6 +25,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
+import java.util.UUID;
+import javafx.util.StringConverter;
 
 public class DocumentView implements Initializable {
 
@@ -66,7 +67,7 @@ public class DocumentView implements Initializable {
     private TableColumn<Document, String> isbnColumn;
 
     @FXML
-    private TableColumn<Document, Integer> categoryColumn;
+    private TableColumn<Document, UUID> categoryColumn;
 
     @FXML
     private TableColumn<Document, Integer> quantityColumn;
@@ -83,9 +84,9 @@ public class DocumentView implements Initializable {
     @FXML
     void add(ActionEvent event) {
         try {
-            int qty = Integer.parseInt(quantity.getText().trim());
+            int qty = Integer.parseInt(quantity.getText());
             boolean success = docController.addDocument(
-                new Document(title.getText(), author.getText(), isbn.getText(), qty)
+                new Document(title.getText(), author.getText(), isbn.getText(), UUID.fromString(category.getText()), qty)
             );
 
             if (success) {
@@ -148,7 +149,7 @@ public class DocumentView implements Initializable {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         docsTable.setEditable(true);
@@ -179,29 +180,37 @@ public class DocumentView implements Initializable {
             reloadTable();
         });
 
-        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<UUID>() {
+            @Override
+            public String toString(UUID uuid) {
+                return uuid != null ? uuid.toString() : "";
+            }
+            @Override
+            public UUID fromString(String string) {
+                try {
+                    return UUID.fromString(string.trim());
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }));
+
         categoryColumn.setOnEditCommit(event -> {
             Document doc = event.getRowValue();
-            // doc.setCategoryId(event.getNewValue());
+            if (event.getNewValue() != null) {
+                doc.setCategoryId(event.getNewValue());
+                docController.updateDocument(doc);
+                reloadTable();
+            }
+        });
+
+        quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        quantityColumn.setOnEditCommit(event -> {
+            Document doc = event.getRowValue();
+            doc.setQuantity(event.getNewValue());
             docController.updateDocument(doc);
             reloadTable();
         });
-
-        quantityColumn.setOnEditCommit(event -> {
-            Document doc = event.getRowValue();
-            try {
-                doc.setQuantity(event.getNewValue());
-                docController.updateDocument(doc);
-            } catch (NumberFormatException e) {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Lỗi nhập liệu");
-                alert.setHeaderText(null);
-                alert.setContentText("Số lượng phải là số nguyên!");
-                alert.showAndWait();
-            }
-            reloadTable();
-        });
-
 
         // Load dữ liệu lần đầu
         loadDocsToListView();
