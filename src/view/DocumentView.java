@@ -26,8 +26,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
-import java.util.UUID;
-import javafx.util.StringConverter;
 
 public class DocumentView implements Initializable {
 
@@ -44,7 +42,7 @@ public class DocumentView implements Initializable {
     private TextField isbn;
 
     @FXML
-    private UUID category;
+    private TextField category;
 
     @FXML
     private TextField quantity;
@@ -68,7 +66,7 @@ public class DocumentView implements Initializable {
     private TableColumn<Document, String> isbnColumn;
 
     @FXML
-    private TableColumn<Document, UUID> categoryColumn;
+    private TableColumn<Document, Integer> categoryColumn;
 
     @FXML
     private TableColumn<Document, Integer> quantityColumn;
@@ -150,7 +148,7 @@ public class DocumentView implements Initializable {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         docsTable.setEditable(true);
@@ -181,28 +179,12 @@ public class DocumentView implements Initializable {
             reloadTable();
         });
 
-        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<UUID>() {
-            @Override
-            public String toString(UUID uuid) {
-                return uuid != null ? uuid.toString() : "";
-            }
-            @Override
-            public UUID fromString(String string) {
-                try {
-                    return UUID.fromString(string.trim());
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        }));
-
+        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         categoryColumn.setOnEditCommit(event -> {
             Document doc = event.getRowValue();
-            if (event.getNewValue() != null) {
-                doc.setCategoryId(event.getNewValue());
-                docController.updateDocument(doc);
-                reloadTable();
-            }
+            // doc.setCategoryId(event.getNewValue());
+            docController.updateDocument(doc);
+            reloadTable();
         });
 
         quantityColumn.setOnEditCommit(event -> {

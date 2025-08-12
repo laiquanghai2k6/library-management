@@ -24,19 +24,19 @@
     <!-- Form  -->
 
     <Label text="Tiêu đề:" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="80" />
-    <TextField fx:id="titleField" prefWidth="200" AnchorPane.leftAnchor="70" AnchorPane.topAnchor="75" />
+    <TextField fx:id="title" prefWidth="200" AnchorPane.leftAnchor="70" AnchorPane.topAnchor="75" />
 
     <Label text="Tác giả:" AnchorPane.leftAnchor="290" AnchorPane.topAnchor="80" />
-    <TextField fx:id="authorField" prefWidth="230" AnchorPane.leftAnchor="340" AnchorPane.topAnchor="75" />
+    <TextField fx:id="author" prefWidth="230" AnchorPane.leftAnchor="340" AnchorPane.topAnchor="75" />
 
     <Label text="ISBN:" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="115" />
-    <TextField fx:id="isbnField" prefWidth="150" AnchorPane.leftAnchor="70" AnchorPane.topAnchor="110" />
+    <TextField fx:id="isbn" prefWidth="150" AnchorPane.leftAnchor="70" AnchorPane.topAnchor="110" />
 
     <Label text="Danh mục:" AnchorPane.leftAnchor="230" AnchorPane.topAnchor="115" />
-    <TextField fx:id="categoryIDField" prefWidth="80" AnchorPane.leftAnchor="310" AnchorPane.topAnchor="110" />
+    <TextField fx:id="categoryId" prefWidth="80" AnchorPane.leftAnchor="310" AnchorPane.topAnchor="110" />
 
     <Label text="Số lượng:" AnchorPane.leftAnchor="410" AnchorPane.topAnchor="115" />
-    <TextField fx:id="quantityField" prefWidth="60" AnchorPane.leftAnchor="470" AnchorPane.topAnchor="110" />
+    <TextField fx:id="quantity" prefWidth="60" AnchorPane.leftAnchor="470" AnchorPane.topAnchor="110" />
 
     <!-- buttons -->
     <Button fx:id="addDocs" onAction="#add" prefHeight="30" prefWidth="100" text="Thêm" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="150" />
@@ -52,7 +52,7 @@
             <TableColumn fx:id="titleColumn" prefWidth="140" text="Tiêu đề" />
             <TableColumn fx:id="authorColumn" prefWidth="140" text="Tác giả" />
             <TableColumn fx:id="isbnColumn" prefWidth="100" text="ISBN" />
-            <TableColumn fx:id="categoryColumn" prefWidth="80" text="Danh mục" />
+            <TableColumn fx:id="categoryIdColumn" prefWidth="80" text="Danh mục" />
             <TableColumn fx:id="quantityColumn" prefWidth="80" text="Số lượng" />
         </columns>
     </TableView>

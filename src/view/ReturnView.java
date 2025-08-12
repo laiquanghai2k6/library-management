@@ -7,33 +7,49 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
+
+import controller.DocumentController;
+import controller.RatingController;
+import controller.UserController;
+import model.Document;
+import model.Rating; 
+import model.User;
 
 public class ReturnView {
+    private final RatingController ratingController = new RatingController();
+    private final UserController userController = new UserController();
+    private final DocumentController documentController = new DocumentController();
+
     @FXML
     private VBox reviewListVBox;
 
     @FXML
     public void initialize() {
-        // Thêm thử danh sách đánh giá demo
-        addReview("Nguyễn Văn A", "Đánh giá: 5 sao");
-        addReview("Trần Thị B", "Đánh giá: 4 sao");
-        addReview("Lê Văn C", "Đánh giá: 3 sao");
-        addReview("Phạm Thị D", "Đánh giá: 4 sao");
+        List<Rating> ratings = ratingController.getAllRatings();
+        for (Rating rating : ratings) {
+            User user = userController.getUserById(rating.getUser_id());
+            Document document = documentController.getDocumentById(rating.getDocument_id());
+            String reviewText = rating.getComment(); 
+
+            String reviewDisplay =   reviewText;
+            addReview(user.getName(), reviewDisplay,document.getTitle());
+        }
     }
 
-    private void addReview(String username, String review) {
-        Label label = new Label(username + " : " + review);
+    private void addReview(String username, String review, String bookName) {
+        Label label = new Label(username + " : " + review + " (" +bookName +")");
         label.setStyle(
                 "-fx-font-size: 14px; " +
-                        "-fx-padding: 3 0 3 0; " +
-                        "-fx-text-fill: black; " + 
-                        "-fx-border-color: white; " + 
-                        "-fx-border-width: 1px; " + 
-                        "-fx-border-radius: 3px;" 
+                "-fx-padding: 3 0 3 0; " +
+                "-fx-text-fill: black; " + 
+                "-fx-border-color: white; " + 
+                "-fx-border-width: 1px; " + 
+                "-fx-border-radius: 3px;" 
         );
         reviewListVBox.getChildren().add(label);
     }
