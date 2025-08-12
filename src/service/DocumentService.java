@@ -7,6 +7,7 @@ import util.SupabaseClient;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.UUID;
 
 public class DocumentService {
 
@@ -48,7 +49,7 @@ public class DocumentService {
         }
     }
 
-    public boolean deleteDocument(int id) {
+    public boolean deleteDocument(UUID id) {
         try {
             int status = SupabaseClient.delete("/rest/v1/documents?id=eq." + id);
             return status == 204;

@@ -4,6 +4,7 @@ import model.Document;
 import service.DocumentService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DocumentController {
     private final DocumentService documentService;
@@ -24,7 +25,7 @@ public class DocumentController {
         return documentService.updateDocument(doc);
     }
 
-    public boolean deleteDocument(int id) {
+    public boolean deleteDocument(UUID id) {
         return documentService.deleteDocument(id);
     }
 }
