@@ -4,12 +4,21 @@ import model.Document;
 import service.DocumentService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class DocumentController {
     private final DocumentService documentService;
 
     public DocumentController() {
         this.documentService = new DocumentService();
+    }
+
+    public List<Document> searchDocumentsByName(String name){
+        return documentService.searchDocumentsByName(name);
+    }
+
+    public Document getDocumentById(UUID id){
+        return documentService.getDocumentById(id);
     }
 
     public List<Document> getAllDocuments() {
@@ -24,7 +33,7 @@ public class DocumentController {
         return documentService.updateDocument(doc);
     }
 
-    public boolean deleteDocument(int id) {
+    public boolean deleteDocument(UUID id) {
         return documentService.deleteDocument(id);
     }
 }

@@ -3,7 +3,7 @@ package model;
 import java.util.UUID;
 
 public class Document {
-    private int id;
+    private UUID id;
     private String title;
     private String author;
     private String isbn;
@@ -13,7 +13,7 @@ public class Document {
     public Document() {
     }
 
-    public Document(int id, String title, String author, String isbn, UUID category_id, int quantity) {
+    public Document(UUID id, String title, String author, String isbn, UUID category_id, int quantity) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -23,7 +23,7 @@ public class Document {
     }
 
     // Getters
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
@@ -48,7 +48,7 @@ public class Document {
     }
 
     // Setter
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

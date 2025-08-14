@@ -1,7 +1,11 @@
 package service;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import adapter.LocalDateTypeAdapter;
+import adapter.UUIDTypeAdapter;
 import model.User;
 import util.SupabaseClient;
 
@@ -9,10 +13,42 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class UserService {
 
-    private static final Gson gson = new Gson();
+    private static final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(UUID.class, new UUIDTypeAdapter())
+            .create();
+
+    public List<User> searchUserByName(String name) {
+        List<User> allUsers = getAllUsers();
+        return allUsers.stream()
+                .filter(user -> user.getName().toLowerCase().contains(name.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public User getUserById(UUID id) {
+        try {
+            // Gọi endpoint lọc theo id, giả sử id là chuỗi (nếu kiểu khác thì sửa lại)
+            String json = SupabaseClient.get("/rest/v1/users?id=eq." + id);
+
+            Type listType = new TypeToken<List<User>>() {
+            }.getType();
+            List<User> users = gson.fromJson(json, listType);
+
+            if (users != null && !users.isEmpty()) {
+                return users.get(0);
+            } else {
+                return null; // không tìm thấy
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lấy user theo id:");
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public List<User> getAllUsers() {
         try {
@@ -22,7 +58,7 @@ public class UserService {
             Type listType = new TypeToken<List<User>>() {
             }.getType();
             return gson.fromJson(json, listType);
-            
+
         } catch (Exception e) {
             System.out.println(" Lỗi khi lấy danh sách người dùng:");
             e.printStackTrace();

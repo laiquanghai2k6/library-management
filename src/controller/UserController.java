@@ -4,12 +4,21 @@ import model.User;
 import service.UserService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class UserController {
     private final UserService userService;
 
     public UserController() {
         this.userService = new UserService();
+    }
+
+    public List<User> searchUserByName(String name) {
+        return userService.searchUserByName(name);
+    }
+
+    public User getUserById(UUID id) {
+        return userService.getUserById(id);
     }
 
     public List<User> getAllUsers() {

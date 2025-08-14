@@ -4,6 +4,7 @@ import model.Rating;
 import service.RatingService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RatingController {
     private final RatingService ratingService;
@@ -12,7 +13,11 @@ public class RatingController {
         this.ratingService = new RatingService();
     }
 
-    public List<Rating> getRatingsByDocumentId(int id) {
+    public List<Rating> getAllRatings(){
+        return ratingService.getAllRatings();
+    }
+
+    public List<Rating> getRatingsByDocumentId(UUID id) {
         return ratingService.getRatingsByDocumentId(id);
     }
 
