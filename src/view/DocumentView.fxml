@@ -8,72 +8,54 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="450.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/24.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="view.DocumentView">
+<AnchorPane prefHeight="450.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.DocumentView">
 
     <!-- Title -->
-    <Label text="Tài liệu" 
-           AnchorPane.topAnchor="10" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-           style="-fx-alignment: center;" >
+    <Label style="-fx-alignment: center;" text="Tài liệu" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="10">
         <font>
-            <Font size="26"/>
+            <Font size="26" />
         </font>
     </Label>
 
-    <Button text="Quay lại" onAction="#Back" 
-            AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" 
-            prefWidth="90" prefHeight="30"/>
+    <Button onAction="#Back" prefHeight="30" prefWidth="90" text="Quay lại" AnchorPane.bottomAnchor="10" AnchorPane.leftAnchor="10" />
 
-    <Label text="Thêm tài liệu" 
-           AnchorPane.topAnchor="50" AnchorPane.leftAnchor="10"
-           style="-fx-font-weight: bold; -fx-font-size: 14;" />
+    <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Thêm tài liệu" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50" />
 
     <!-- Form  -->
 
-    <Label text="Tiêu đề:" AnchorPane.topAnchor="80" AnchorPane.leftAnchor="10"/>
-    <TextField fx:id="titleField" AnchorPane.topAnchor="75" AnchorPane.leftAnchor="70" prefWidth="200" />
+    <Label text="Tiêu đề:" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="80" />
+    <TextField fx:id="title" prefWidth="200" AnchorPane.leftAnchor="70" AnchorPane.topAnchor="75" />
 
-    <Label text="Tác giả:" AnchorPane.topAnchor="80" AnchorPane.leftAnchor="290"/>
-    <TextField fx:id="authorField" AnchorPane.topAnchor="75" AnchorPane.leftAnchor="340" prefWidth="230" />
+    <Label text="Tác giả:" AnchorPane.leftAnchor="290" AnchorPane.topAnchor="80" />
+    <TextField fx:id="author" prefWidth="230" AnchorPane.leftAnchor="340" AnchorPane.topAnchor="75" />
 
-    <Label text="ISBN:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="10" />
-    <TextField fx:id="isbnField" AnchorPane.topAnchor="110" AnchorPane.leftAnchor="70" prefWidth="150" />
+    <Label text="ISBN:" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="115" />
+    <TextField fx:id="isbn" prefWidth="150" AnchorPane.leftAnchor="70" AnchorPane.topAnchor="110" />
 
-    <Label text="Danh mục:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="230" />
-    <TextField fx:id="categoryIDField" AnchorPane.topAnchor="110" AnchorPane.leftAnchor="310" prefWidth="80" />
+    <Label text="Danh mục:" AnchorPane.leftAnchor="230" AnchorPane.topAnchor="115" />
+    <TextField fx:id="category" prefWidth="80" AnchorPane.leftAnchor="310" AnchorPane.topAnchor="110" />
 
-    <Label text="Số lượng:" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="410" />
-    <TextField fx:id="quantityField" AnchorPane.topAnchor="110" AnchorPane.leftAnchor="470" prefWidth="60" />
+    <Label text="Số lượng:" AnchorPane.leftAnchor="410" AnchorPane.topAnchor="115" />
+    <TextField fx:id="quantity" prefWidth="60" AnchorPane.leftAnchor="470" AnchorPane.topAnchor="110" />
 
     <!-- buttons -->
-    <Button fx:id="addDocs" text="Thêm" 
-            AnchorPane.topAnchor="150" AnchorPane.leftAnchor="10" 
-            prefWidth="100" prefHeight="30" />
+    <Button fx:id="addDocs" onAction="#add" prefHeight="30" prefWidth="100" text="Thêm" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="150" />
 
-    <Button fx:id="clearFields" text="Xóa" 
-            AnchorPane.topAnchor="150" AnchorPane.leftAnchor="120" 
-            prefWidth="100" prefHeight="30" />
+    <Button fx:id="clearFields" prefHeight="30" prefWidth="100" text="Xóa" AnchorPane.leftAnchor="120" AnchorPane.topAnchor="150" />
 
-    <Label text="Danh sách tài liệu" 
-           AnchorPane.topAnchor="190" AnchorPane.leftAnchor="10"
-           style="-fx-font-weight: bold; -fx-font-size: 14;" />
+    <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Danh sách tài liệu" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="190" />
 
     <!-- bảng danh sách tài liệu -->
-    <TableView fx:id="docsTable" AnchorPane.topAnchor="220" AnchorPane.leftAnchor="10" 
-               AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="50" >
+    <TableView fx:id="docsTable" AnchorPane.bottomAnchor="50" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="220">
         <columns>
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
-            <TableColumn fx:id="titleColumn" text="Tiêu đề" prefWidth="140" />
-            <TableColumn fx:id="authorColumn" text="Tác giả" prefWidth="140" />
-            <TableColumn fx:id="isbnColumn" text="ISBN" prefWidth="100" />
-            <TableColumn fx:id="categoryIDColumn" text="Danh mục" prefWidth="80" />
-            <TableColumn fx:id="quantityColumn" text="Số lượng" prefWidth="80" />
+            <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+            <TableColumn fx:id="titleColumn" prefWidth="140" text="Tiêu đề" />
+            <TableColumn fx:id="authorColumn" prefWidth="140" text="Tác giả" />
+            <TableColumn fx:id="isbnColumn" prefWidth="100" text="ISBN" />
+            <TableColumn fx:id="categoryColumn" prefWidth="80" text="Danh mục" />
+            <TableColumn fx:id="quantityColumn" prefWidth="80" text="Số lượng" />
         </columns>
     </TableView>
 
-    <Button fx:id="updateButton" text="Cập nhật" 
-            AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" 
-            prefWidth="90" prefHeight="30"/>
+    <Button fx:id="updateButton" onAction="#update" prefHeight="30" prefWidth="90" text="Cập nhật" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" />
 </AnchorPane>

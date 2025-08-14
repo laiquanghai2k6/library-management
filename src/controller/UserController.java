@@ -21,6 +21,7 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }

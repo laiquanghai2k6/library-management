@@ -50,6 +50,9 @@ public class UserService {
         }
     }
 
+     
+    
+
     public List<User> getAllUsers() {
         try {
             String json = SupabaseClient.get("/rest/v1/users?select=*");

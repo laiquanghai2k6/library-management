@@ -146,6 +146,7 @@ public class ReturnView {
                         "-fx-border-color: white; " +
                         "-fx-border-width: 1px; " +
                         "-fx-border-radius: 3px;");
+        
         reviewListVBox.getChildren().add(label);
     }
 

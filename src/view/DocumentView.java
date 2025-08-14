@@ -19,10 +19,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.IntegerStringConverter;
+import java.util.UUID;
+import javafx.util.StringConverter;
 
 public class DocumentView implements Initializable {
 
@@ -63,7 +67,7 @@ public class DocumentView implements Initializable {
     private TableColumn<Document, String> isbnColumn;
 
     @FXML
-    private TableColumn<Document, Integer> categoryColumn;
+    private TableColumn<Document, UUID> categoryColumn;
 
     @FXML
     private TableColumn<Document, Integer> quantityColumn;
@@ -77,13 +81,75 @@ public class DocumentView implements Initializable {
     private Parent root;
     private final DocumentController docController = new DocumentController();
 
+    @FXML
+    void add(ActionEvent event) {
+        try {
+            int qty = Integer.parseInt(quantity.getText());
+            boolean success = docController.addDocument(
+                new Document(title.getText(), author.getText(), isbn.getText(), UUID.fromString(category.getText()), qty)
+            );
+
+            if (success) {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Thành công");
+                alert.setHeaderText(null);
+                alert.setContentText("Thêm tài liệu thành công!");
+                alert.showAndWait();
+                loadDocsToListView();
+            } else {
+                showError("Không thể thêm tài liệu", "Vui lòng kiểm tra lại dữ liệu và thử lại.");
+            }
+        } catch (NumberFormatException e) {
+            showError("Lỗi nhập liệu", "Số lượng phải là số nguyên!");
+        }
+    }
+
+    private void showError(String header, String content) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Lỗi");
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
+    @FXML
+    void update(ActionEvent event) {
+        boolean allSuccess = true;
+        StringBuilder failedDocs = new StringBuilder();
+
+        for (Document doc : docsTable.getItems()) {
+            boolean success = docController.updateDocument(doc);
+            if (!success) {
+                allSuccess = false;
+                failedDocs.append(doc.getTitle()).append(", ");
+            }
+        }
+
+        if (allSuccess) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Thông báo");
+            alert.setHeaderText(null);
+            alert.setContentText("Cập nhật thành công tất cả tài liệu!");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Lỗi cập nhật");
+            alert.setHeaderText("Có lỗi khi cập nhật tài liệu");
+            alert.setContentText("Cập nhật thất bại với tài liệu: " + failedDocs);
+            alert.showAndWait();
+        }
+
+        loadDocsToListView();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         docsTable.setEditable(true);
@@ -114,18 +180,34 @@ public class DocumentView implements Initializable {
             reloadTable();
         });
 
-        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<UUID>() {
+            @Override
+            public String toString(UUID uuid) {
+                return uuid != null ? uuid.toString() : "";
+            }
+            @Override
+            public UUID fromString(String string) {
+                try {
+                    return UUID.fromString(string.trim());
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }));
+
         categoryColumn.setOnEditCommit(event -> {
             Document doc = event.getRowValue();
-            // doc.setCategoryId(event.getNewValue());
-            docController.updateDocument(doc);
-            reloadTable();
+            if (event.getNewValue() != null) {
+                doc.setCategoryId(event.getNewValue());
+                docController.updateDocument(doc);
+                reloadTable();
+            }
         });
 
         quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         quantityColumn.setOnEditCommit(event -> {
             Document doc = event.getRowValue();
-            // doc.setQuantity(event.getNewValue());
+            doc.setQuantity(event.getNewValue());
             docController.updateDocument(doc);
             reloadTable();
         });
