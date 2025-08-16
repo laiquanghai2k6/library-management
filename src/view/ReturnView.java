@@ -51,7 +51,8 @@ public class ReturnView {
     @FXML
     private VBox reviewListVBox;
 
-    private PauseTransition pause = new PauseTransition(Duration.millis(300));
+    private PauseTransition bookPause = new PauseTransition(Duration.millis(300));
+    private PauseTransition userPause = new PauseTransition(Duration.millis(300));
 
     private ObservableList<String> items;
     private ObservableList<String> usersItem;
@@ -74,10 +75,10 @@ public class ReturnView {
                 return;
             }
 
-            pause.setOnFinished(event -> {
+            bookPause.setOnFinished(event -> {
                 autocompleteComboBox(newText);
             });
-            pause.playFromStart();
+            bookPause.playFromStart();
         });
 
         usersComboBox.getEditor().textProperty().addListener((obs, oldText, newText) -> {
@@ -87,10 +88,10 @@ public class ReturnView {
                 return;
             }
 
-            pause.setOnFinished(event -> {
+            userPause.setOnFinished(event -> {
                 autocompleteUserComboBox(newText);
             });
-            pause.playFromStart();
+            userPause.playFromStart();
         });
 
         // Hiển thị tất cả đánh giá ban đầu
@@ -195,11 +196,24 @@ public class ReturnView {
         boolean isSuccess = returnController.addReturnRecord(returnRecord);
         // returnRecordController.addReturnRecord(returnRecord);
         if (isSuccess) {
+            String comment = ratingField.getText().trim();
 
             showAlert(Alert.AlertType.INFORMATION, "Thành công",
                     "Trả sách thành công: " + bookText +
                             " bởi " + username);
+            if (!comment.isEmpty()) {
+                Rating rating = new Rating(
+                        UUID.randomUUID(),
+                        documentId,
+                        userId,
+                        LocalDate.now(),
+                        comment);
+                ratingController.addRating(rating);
+
+                addReview(username, comment, bookText);
+            }
             // Xoá field sau khi submit
+            ratingField.clear();
             bookNameComboBox.getEditor().clear();
             usersComboBox.getEditor().clear();
         } else {
@@ -228,7 +242,7 @@ public class ReturnView {
                         "-fx-border-width: 1px; " +
                         "-fx-border-radius: 3px;");
 
-        reviewListVBox.getChildren().add(label);
+        reviewListVBox.getChildren().add(0, label);
     }
 
     public void Back(ActionEvent event) throws IOException {
