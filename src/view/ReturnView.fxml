@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ComboBox?>
 
 <AnchorPane prefHeight="500.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/24.0.1"
@@ -24,19 +25,19 @@
     </Label>
 
     <Label text="Tên sách:" AnchorPane.topAnchor="80" AnchorPane.leftAnchor="40" />
-    <TextField fx:id="bookNameField" AnchorPane.topAnchor="75" AnchorPane.leftAnchor="120" prefWidth="350" />
+    <ComboBox fx:id="bookNameComboBox" editable="true" AnchorPane.topAnchor="75" AnchorPane.leftAnchor="120" prefWidth="350" />
 
     <Label text="Người trả:" AnchorPane.topAnchor="120" AnchorPane.leftAnchor="40" />
-    <TextField fx:id="returnerNameField" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="120" prefWidth="350" />
+    <Label text="(Tên – Email)" style="-fx-font-size: 10;" 
+       AnchorPane.topAnchor="140" AnchorPane.leftAnchor="40" />
+    <ComboBox fx:id="usersComboBox" editable="true" AnchorPane.topAnchor="115" AnchorPane.leftAnchor="120" prefWidth="350" />
 
-    <Label text="Ngày trả:" AnchorPane.topAnchor="160" AnchorPane.leftAnchor="40" />
-    <DatePicker fx:id="returnDatePicker" AnchorPane.topAnchor="155" AnchorPane.leftAnchor="120" prefWidth="200" />
 
     <Label text="Đánh giá:" AnchorPane.topAnchor="200" AnchorPane.leftAnchor="40" />
     <TextField fx:id="ratingField" promptText="Sách tuyệt quá" AnchorPane.topAnchor="195" AnchorPane.leftAnchor="120" prefWidth="350" />
 
     <Button text="Xác nhận trả sách" AnchorPane.topAnchor="240" AnchorPane.leftAnchor="120" 
-            prefWidth="150" prefHeight="35" mnemonicParsing="false" fx:id="confirmReturnBtn" />
+      onAction="#submit"      prefWidth="150" prefHeight="35" mnemonicParsing="false" fx:id="confirmReturnBtn" />
 
     <Button text="Quay lại" AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20" prefWidth="100" prefHeight="30" onAction="#Back" />
 

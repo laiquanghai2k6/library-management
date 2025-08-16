@@ -13,6 +13,19 @@ public class DocumentController {
         this.documentService = new DocumentService();
     }
 
+
+    public List<Document> searchDocumentsByName(String name){
+        return documentService.searchDocumentsByName(name);
+    }
+
+    public UUID getDocumentIdByName(String name){
+        return documentService.getDocumentIdByName(name);
+    }
+
+    public Document getDocumentById(UUID id){
+        return documentService.getDocumentById(id);
+    }
+
     public List<Document> getAllDocuments() {
         return documentService.getAllDocuments();
     }

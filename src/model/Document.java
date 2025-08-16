@@ -13,6 +13,7 @@ public class Document {
     public Document() {
     }
 
+
     public Document(String title, String author, String isbn, UUID category_id, int quantity) {
         this.title = title;
         this.author = author;

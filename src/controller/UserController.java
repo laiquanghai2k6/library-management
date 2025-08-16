@@ -13,9 +13,19 @@ public class UserController {
         this.userService = new UserService();
     }
 
+    public List<User> searchUserByName(String name) {
+        return userService.searchUserByName(name);
+    }
+
     public User getUserById(UUID id) {
         return userService.getUserById(id);
     }
+
+    public UUID getUserIdByEmail(String email){
+        return userService.getUserIdByEmail(email);
+    }
+
+
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }

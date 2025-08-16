@@ -29,11 +29,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import controller.BorrowController;
+import controller.UserController;
 import javafx.fxml.Initializable;
 
 public class BorrowView implements Initializable{
 
     private final BorrowController borrowController = new BorrowController();
+    private final UserController userController = new UserController();
 
     @FXML
     private TableColumn<BorrowRecord, String> bookNameColumn;
@@ -87,52 +89,15 @@ public class BorrowView implements Initializable{
             }
         });
 
-        bookNameColumn.setOnEditCommit(event -> {
-            BorrowRecord borrowRecord = event.getRowValue();
-            borrowRecord.setName(event.getNewValue());
-        });
-
-        emailColumn.setCellFactory(column -> new TextFieldTableCell<User, String>(new DefaultStringConverter()) {
-            private final Text text = new Text();
-
-            {
-                text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
-                setGraphic(text);
-                setPrefHeight(Control.USE_COMPUTED_SIZE);
-            }
-
-            @Override
-            public void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    text.setText(null);
-                    setGraphic(null);
-                } else {
-                    text.setText(item);
-                    setGraphic(text);
-                }
-            }
-        });
-
-        emailColumn.setOnEditCommit(event -> {
-            User user = event.getRowValue();
-            user.setEmail(event.getNewValue());
-            // Không gọi userController.updateUser(user) ở đây
-        });
-
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         loadUsersToListView();
     }
 
     @FXML
     public void loadUsersToListView() {
-        userTable.getItems().clear();
+        // userTable.getItems().clear();
         List<User> users = userController.getAllUsers();
-        userTable.getItems().addAll(users);
+        // userTable.getItems().addAll(users);
     }
 
     public void Back(ActionEvent event) throws IOException {
