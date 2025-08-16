@@ -4,6 +4,7 @@ import model.ReturnRecord;
 import service.ReturnService;
 
 import java.util.List;
+import java.util.UUID;
 
 public class ReturnController {
     private final ReturnService returnRecordService;
@@ -22,4 +23,6 @@ public class ReturnController {
     public boolean deleteReturnRecord(int id) {
         return returnRecordService.deleteReturn(id);
     }
+
+
 }

@@ -9,26 +9,38 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import controller.BorrowController;
 import controller.DocumentController;
 import controller.RatingController;
+import controller.ReturnController;
 import controller.UserController;
+import model.BorrowRecord;
 import model.Document;
 import model.Rating;
+import model.ReturnRecord;
 import model.User;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class ReturnView {
 
     private final RatingController ratingController = new RatingController();
     private final UserController userController = new UserController();
     private final DocumentController documentController = new DocumentController();
+    private final ReturnController returnController = new ReturnController();
+    private final BorrowController borrowController = new BorrowController();
+
+    @FXML
+    private javafx.scene.control.TextField ratingField;
 
     @FXML
     private ComboBox<String> bookNameComboBox;
@@ -44,7 +56,6 @@ public class ReturnView {
     private ObservableList<String> items;
     private ObservableList<String> usersItem;
 
-
     @FXML
     public void initialize() {
         bookNameComboBox.setEditable(true);
@@ -55,7 +66,6 @@ public class ReturnView {
 
         bookNameComboBox.setItems(items);
         usersComboBox.setItems(usersItem);
-
 
         bookNameComboBox.getEditor().textProperty().addListener((obs, oldText, newText) -> {
             // Nếu đang chọn item trùng với text thì bỏ qua
@@ -117,7 +127,7 @@ public class ReturnView {
 
         usersItem.clear();
         for (User user : matchedUser) {
-            usersItem.add(user.getName()+" - "+user.getEmail());
+            usersItem.add(user.getName() + " - " + user.getEmail());
         }
 
         if (!usersItem.isEmpty()) {
@@ -137,6 +147,77 @@ public class ReturnView {
         }
     }
 
+    @FXML
+    private void submit() {
+        String bookText = bookNameComboBox.getEditor().getText().trim();
+        String userText = usersComboBox.getEditor().getText().trim();
+
+        if (bookText.isEmpty() || userText.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Chưa điền đủ thông tin",
+                    "Vui lòng chọn sách và người dùng trước khi trả.");
+            return;
+        }
+        String[] parts = userText.split(" - ");
+        if (parts.length < 2) {
+            showAlert(Alert.AlertType.ERROR, "Sai định dạng người dùng",
+                    "Vui lòng chọn người dùng từ danh sách.");
+            return;
+        }
+        String email = parts[1].trim();
+        String username = parts[0].trim();
+        UUID userId = userController.getUserIdByEmail(email);
+        if (userId == null) {
+            showAlert(Alert.AlertType.ERROR, "Không tìm thấy người dùng",
+                    "Không tìm thấy người dùng với email: " + email);
+            return;
+        }
+
+        UUID documentId = documentController.getDocumentIdByName(bookText);
+        if (documentId == null) {
+            showAlert(Alert.AlertType.ERROR, "Không tìm thấy sách",
+                    "Không tìm thấy sách với tên: " + bookText);
+            return;
+        }
+
+        BorrowRecord borrowRecord = borrowController.getBorrowRecord(documentId, userId);
+        if (borrowRecord == null) {
+            showAlert(Alert.AlertType.ERROR, "Người dùng chưa mượn sách",
+                    "Người dùng này chưa mượn quyển sách: " + bookText);
+            return;
+        }
+
+        // Tạo ReturnRecord mới
+        ReturnRecord returnRecord = new ReturnRecord(
+                UUID.randomUUID(),
+                borrowRecord.getId(),
+                LocalDate.now(),
+                userId);
+        boolean isSuccess = returnController.addReturnRecord(returnRecord);
+        // returnRecordController.addReturnRecord(returnRecord);
+        if (isSuccess) {
+
+            showAlert(Alert.AlertType.INFORMATION, "Thành công",
+                    "Trả sách thành công: " + bookText +
+                            " bởi " + username);
+            // Xoá field sau khi submit
+            bookNameComboBox.getEditor().clear();
+            usersComboBox.getEditor().clear();
+        } else {
+
+            showAlert(Alert.AlertType.ERROR, "Thất bại",
+                    "Trả sách thất bại!");
+        }
+
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     private void addReview(String username, String review, String bookName) {
         Label label = new Label(username + " : " + review + " (" + bookName + ")");
         label.setStyle(
@@ -146,7 +227,7 @@ public class ReturnView {
                         "-fx-border-color: white; " +
                         "-fx-border-width: 1px; " +
                         "-fx-border-radius: 3px;");
-        
+
         reviewListVBox.getChildren().add(label);
     }
 

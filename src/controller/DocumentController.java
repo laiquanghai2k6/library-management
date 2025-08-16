@@ -13,8 +13,13 @@ public class DocumentController {
         this.documentService = new DocumentService();
     }
 
+
     public List<Document> searchDocumentsByName(String name){
         return documentService.searchDocumentsByName(name);
+    }
+
+    public UUID getDocumentIdByName(String name){
+        return documentService.getDocumentIdByName(name);
     }
 
     public Document getDocumentById(UUID id){

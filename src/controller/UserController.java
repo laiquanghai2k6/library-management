@@ -21,6 +21,10 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    public UUID getUserIdByEmail(String email){
+        return userService.getUserIdByEmail(email);
+    }
+
 
     public List<User> getAllUsers() {
         return userService.getAllUsers();

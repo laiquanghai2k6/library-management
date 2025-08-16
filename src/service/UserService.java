@@ -50,7 +50,26 @@ public class UserService {
         }
     }
 
-     
+     public UUID getUserIdByEmail(String email){
+        try {
+            // Gọi endpoint lọc theo id, giả sử id là chuỗi (nếu kiểu khác thì sửa lại)
+            String json = SupabaseClient.get("/rest/v1/users?email=eq." + email);
+
+            Type listType = new TypeToken<List<User>>() {
+            }.getType();
+            List<User> users = gson.fromJson(json, listType);
+
+            if (users != null && !users.isEmpty()) {
+                return users.get(0).getId();
+            } else {
+                return null; // không tìm thấy
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi khi lấy user theo id:");
+            e.printStackTrace();
+            return null;
+        }
+     }
     
 
     public List<User> getAllUsers() {
