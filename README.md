@@ -29,7 +29,7 @@
 - **Frontend:** JavaFX (Java)
 - **Backend:** Java (REST API)
 - **Database / BaaS:** Supabase (PostgreSQL)
-- **Tools & Others:** Git, GitHub, VSCode, Maven/Gradle.
+- **Tools & Others:** Git, GitHub, VSCode, Junit.
 
 ---
 
@@ -51,7 +51,7 @@
 4. **Xử lí các trường hợp lỗi**
 5. **Giao diện người dùng**
 6. **Sử dụng đa luồng cải thiện UX**
-7. **Có thể test các Service bằng Junit**
+7. **Có thể test các Service bằng JUnit**
    
 ---
 
