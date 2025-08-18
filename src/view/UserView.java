@@ -75,21 +75,31 @@ public class UserView implements Initializable {
 
     @FXML
     void submit(ActionEvent event) {
-        boolean success = userController.addUser(new User(name.getText(), email.getText()));
+        String userName = name.getText().trim();
+        String userEmail = email.getText().trim();
+
+        // Validate dữ liệu
+        if (userName.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tên người dùng không được để trống!");
+            return;
+        }
+
+        if (userEmail.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Email người dùng không được để trống!");
+            return;
+        }
+
+        boolean success = userController.addUser(new User(userName, userEmail));
 
         if (success) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thành công");
-            alert.setHeaderText(null);
-            alert.setContentText("Thêm người dùng thành công!");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thêm người dùng thành công!");
             loadUsersToListView();
+            // Có thể xóa dữ liệu trong TextField sau khi thêm
+            name.clear();
+            email.clear();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText("Không thể thêm người dùng");
-            alert.setContentText("Vui lòng kiểm tra lại dữ liệu và thử lại.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Lỗi",
+                    "Không thể thêm người dùng. Vui lòng kiểm tra lại dữ liệu và thử lại.");
         }
     }
 
@@ -99,28 +109,41 @@ public class UserView implements Initializable {
         StringBuilder failedUsers = new StringBuilder();
 
         for (User user : userTable.getItems()) {
+            String userName = user.getName() != null ? user.getName().trim() : "";
+            String userEmail = user.getEmail() != null ? user.getEmail().trim() : "";
+
+            // Validate dữ liệu
+            if (userName.isEmpty() || userEmail.isEmpty()) {
+                allSuccess = false;
+                failedUsers.append(userName.isEmpty() ? "(Tên trống)" : userName)
+                        .append(userEmail.isEmpty() ? " (Email trống)" : "")
+                        .append(", ");
+                continue; // Bỏ qua update user này
+            }
+
             boolean success = userController.updateUser(user);
             if (!success) {
                 allSuccess = false;
-                failedUsers.append(user.getName()).append(", ");
+                failedUsers.append(userName).append(", ");
             }
         }
 
         if (allSuccess) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Cập nhật thành công tất cả người dùng!");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Cập nhật thành công tất cả người dùng!");
         } else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Lỗi cập nhật");
-            alert.setHeaderText("Có lỗi khi cập nhật người dùng");
-            alert.setContentText("Cập nhật thất bại với người dùng: " + failedUsers);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Lỗi cập nhật",
+                    "Có lỗi khi cập nhật một số người dùng: " + failedUsers.toString());
         }
 
         loadUsersToListView();
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @Override
