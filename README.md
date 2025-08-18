@@ -33,6 +33,24 @@
 
 ---
 
+## 🗺️ Sơ đồ
+- **Người dùng:**
+  ![Sơ đồ mượn sách](src/assets/user.png)
+
+- **Tài liệu:**
+  ![Sơ đồ mượn sách](src/assets/document.png)
+  
+- **Mượn sách:**
+  ![Sơ đồ mượn sách](src/assets/borrow.png)
+  
+- **Trả sách:**
+  ![Sơ đồ mượn sách](src/assets/return.png)
+  
+- **Đánh giá:**
+  ![Sơ đồ mượn sách](src/assets/rating.png)
+
+---
+
 ## 🛠️ Tính năng chính
 
 1. **Quản lý người dùng người dùng**
