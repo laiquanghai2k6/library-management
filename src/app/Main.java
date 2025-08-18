@@ -1,10 +1,10 @@
 package app;
 
-import view.TestJavaFX;
+import view.StartJavaFX;
 
 public class Main {
     public static void main(String[] args) {
-        TestJavaFX.main(args);
+        StartJavaFX.main(args);
        
 
     

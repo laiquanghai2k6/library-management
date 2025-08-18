@@ -3,6 +3,7 @@ package view;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -105,26 +106,25 @@ public class UserView implements Initializable {
 
     @FXML
     void update(ActionEvent event) {
-        boolean allSuccess = true;
+        List<User> users = userTable.getItems();
         StringBuilder failedUsers = new StringBuilder();
+        boolean allSuccess = true;
 
-        for (User user : userTable.getItems()) {
-            String userName = user.getName() != null ? user.getName().trim() : "";
-            String userEmail = user.getEmail() != null ? user.getEmail().trim() : "";
+        for (User user : users) {
+            String nameTrimmed = Optional.ofNullable(user.getName()).orElse("").trim();
+            String emailTrimmed = Optional.ofNullable(user.getEmail()).orElse("").trim();
 
-            // Validate dữ liệu
-            if (userName.isEmpty() || userEmail.isEmpty()) {
+            if (nameTrimmed.isEmpty() || emailTrimmed.isEmpty()) {
                 allSuccess = false;
-                failedUsers.append(userName.isEmpty() ? "(Tên trống)" : userName)
-                        .append(userEmail.isEmpty() ? " (Email trống)" : "")
+                failedUsers.append(nameTrimmed.isEmpty() ? "(Tên trống)" : nameTrimmed)
+                        .append(emailTrimmed.isEmpty() ? " (Email trống)" : "")
                         .append(", ");
-                continue; // Bỏ qua update user này
+                continue;
             }
 
-            boolean success = userController.updateUser(user);
-            if (!success) {
+            if (!userController.updateUser(user)) {
                 allSuccess = false;
-                failedUsers.append(userName).append(", ");
+                failedUsers.append(nameTrimmed).append(", ");
             }
         }
 
@@ -135,6 +135,7 @@ public class UserView implements Initializable {
                     "Có lỗi khi cập nhật một số người dùng: " + failedUsers.toString());
         }
 
+        // Reload table sau khi update xong
         loadUsersToListView();
     }
 
