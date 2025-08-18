@@ -82,7 +82,7 @@ public class BorrowService {
         }
     }
 
-    public boolean deleteBorrow(int id) {
+    public boolean deleteBorrow(UUID id) {
         try {
             int status = SupabaseClient.delete("/rest/v1/borrows?id=eq." + id);
             return status == 204;

@@ -20,7 +20,7 @@ public class ReturnController {
     public boolean addReturnRecord(ReturnRecord record) {
         return returnRecordService.returnBook(record);
     }
-    public boolean deleteReturnRecord(int id) {
+    public boolean deleteReturnRecord(UUID id) {
         return returnRecordService.deleteReturn(id);
     }
 
