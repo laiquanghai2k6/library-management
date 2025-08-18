@@ -6,46 +6,64 @@
 
 ## 👥 Thành viên
 
-| Họ và tên | Vai trò | GitHub |
-|-----------|--------|--------|
-| Nguyễn Văn A | Frontend Developer | [GitHub](https://github.com/usernameA) |
-| Trần Thị B | Backend Developer | [GitHub](https://github.com/usernameB) |
-| Lê Văn C | Designer | [GitHub](https://github.com/usernameC) |
+| Họ và tên | Vai trò | GitHub | Đóng góp |
+|-----------|--------|--------|-----------|
+| Lại Quang Hải | Fullstack Developer | [GitHub](https://github.com/laiquanghai2k6) | 50% |
+| Hoàng Thị Linh Hương | Frontend Developer | [GitHub](https://github.com/thitbokho123) | 25% |
+| Lê Thanh Nam | Frontend Developer | [GitHub](https://github.com/yonko2503) | 15% |
+| Phạm Văn Nguyên | Frontend Developer | [Github](https://github.com/sinbadxnguyen) | 10% | 
 
 ---
 
 ## ✨ Đóng góp
 
 - Phân công nhiệm vụ rõ ràng:
-  - Frontend: xây dựng UI, tích hợp API.
-  - Backend: thiết kế cơ sở dữ liệu, viết API.
-  - Designer: thiết kế giao diện, prototype.
-- Tuân thủ **git workflow**: commit rõ ràng, sử dụng PR để review code.
-- Sử dụng các công cụ: Git, GitHub, Docker, VSCode,...
+  - Frontend: xây dựng UI, tích hợp API, thiết kế giao diện.
+  - Backend: thiết kế cơ sở dữ liệu, viết API, viết Test case.
+  - Tuân thủ **git workflow**: commit rõ ràng
+
+---
+
+## 🖥️ Tech Stack
+
+- **Frontend:** JavaFX (Java)
+- **Backend:** Java (REST API)
+- **Database / BaaS:** Supabase (PostgreSQL)
+- **Tools & Others:** Git, GitHub, VSCode, Maven/Gradle.
 
 ---
 
 ## 🛠️ Tính năng chính
 
-1. **Đăng nhập / Đăng ký người dùng**
+1. **Quản lý người dùng người dùng**
+   - Thêm người dùng
+   - Sửa người dùng
 2. **Quản lý tài liệu**
-   - Thêm, sửa, xóa tài liệu
-   - Tìm kiếm và lọc
-3. **Giao tiếp thời gian thực** (nếu có chat, notification,…)
-4. **Báo cáo và thống kê**
-5. **Quản lý người dùng**: phân quyền, cập nhật thông tin
-
+   - Thêm tài liệu
+   - Sửa tài liệu
+   - Xóa tài liệu 
+3. **Mượn/Trả tài liệu**
+   - Tìm kiếm tài liệu
+   - Tìm kiếm người dùng
+   - Mượn tài liệu
+   - Trả tài liệu
+   - Đánh giá tài liệu
+4. **Xử lí các trường hợp lỗi**
+5. **Giao diện người dùng**
+6. **Sử dụng đa luồng cải thiện UX**
+7. **Có thể test các Service bằng Junit**
+   
 ---
 
 ## 🚀 Hướng dẫn chạy dự án
 
 ```bash
 # Clone repo
-git clone https://github.com/username/project-name.git
-cd project-name
+git clone https://github.com/laiquanghai2k6/library-management.git
+cd library-management.git
 
-# Cài dependencies
-npm install  # hoặc yarn
+# Chạy project (nên chạy file .bat bằng cmd terminal)
+load-env
 
-# Chạy project
-npm start
+# Chạy test (nên chạy file .bat bằng cmd terminal)
+run-test
