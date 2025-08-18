@@ -43,12 +43,6 @@ public class DocumentView implements Initializable {
     private TextField isbn;
 
     @FXML
-    private TextField category;
-
-    @FXML
-    private TextField quantity;
-
-    @FXML
     private Button addDocs;
 
     @FXML
@@ -67,12 +61,6 @@ public class DocumentView implements Initializable {
     private TableColumn<Document, String> isbnColumn;
 
     @FXML
-    private TableColumn<Document, UUID> categoryColumn;
-
-    @FXML
-    private TableColumn<Document, Integer> quantityColumn;
-
-    @FXML
     private TableView<Document> docsTable;
 
     int id = 0;
@@ -83,11 +71,23 @@ public class DocumentView implements Initializable {
 
     @FXML
     void add(ActionEvent event) {
+        if (title.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tiêu đề không được để trống!");
+            return;
+        }
+
+        if (author.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tác giả không được để trống!");
+            return;
+        }
+
+        if (isbn.getText().trim().isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "ISBN không được để trống!");
+            return;
+        }
         try {
-            int qty = Integer.parseInt(quantity.getText());
             boolean success = docController.addDocument(
-                new Document(title.getText(), author.getText(), isbn.getText(), UUID.fromString(category.getText()), qty)
-            );
+                    new Document(title.getText(), author.getText(), isbn.getText()));
 
             if (success) {
                 Alert alert = new Alert(AlertType.INFORMATION);
@@ -112,13 +112,20 @@ public class DocumentView implements Initializable {
         alert.showAndWait();
     }
 
-
     @FXML
     void update(ActionEvent event) {
         boolean allSuccess = true;
         StringBuilder failedDocs = new StringBuilder();
 
         for (Document doc : docsTable.getItems()) {
+            if (doc.getTitle().trim().isEmpty() ||
+                    doc.getAuthor().trim().isEmpty() ||
+                    doc.getIsbn().trim().isEmpty()) {
+                allSuccess = false;
+                failedDocs.append(doc.getTitle()).append(" (thiếu dữ liệu), ");
+                continue; // bỏ qua doc này
+            }
+
             boolean success = docController.updateDocument(doc);
             if (!success) {
                 allSuccess = false;
@@ -127,20 +134,55 @@ public class DocumentView implements Initializable {
         }
 
         if (allSuccess) {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Cập nhật thành công tất cả tài liệu!");
-            alert.showAndWait();
+            showAlert(AlertType.INFORMATION, "Thông báo", "Cập nhật thành công tất cả tài liệu!");
         } else {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Lỗi cập nhật");
-            alert.setHeaderText("Có lỗi khi cập nhật tài liệu");
-            alert.setContentText("Cập nhật thất bại với tài liệu: " + failedDocs);
-            alert.showAndWait();
+            showAlert(AlertType.ERROR, "Lỗi cập nhật",
+                    "Có lỗi khi cập nhật một số tài liệu: " + failedDocs);
         }
 
         loadDocsToListView();
+    }
+
+    @FXML
+    void deleteDocument(ActionEvent event) {
+        Document selectedDoc = docsTable.getSelectionModel().getSelectedItem();
+
+        if (selectedDoc == null) {
+            // Nếu chưa chọn document nào
+            showAlert(Alert.AlertType.WARNING, "Chưa chọn tài liệu", "Vui lòng chọn tài liệu muốn xóa!");
+            return;
+        }
+
+        // Xác nhận trước khi xóa
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận xóa");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Bạn có chắc chắn muốn xóa tài liệu: " + selectedDoc.getTitle() + "?");
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            switch (response.getButtonData()) {
+                case OK_DONE -> {
+                    boolean success = docController.deleteDocument(selectedDoc.getId());
+                    if (success) {
+                        showAlert(Alert.AlertType.INFORMATION, "Thành công", "Xóa tài liệu thành công!");
+                        loadDocsToListView(); // refresh table
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể xóa tài liệu. Vui lòng thử lại.");
+                    }
+                }
+                default -> {
+                    // Người dùng hủy xóa, không làm gì
+                }
+            }
+        });
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     @Override
@@ -149,8 +191,6 @@ public class DocumentView implements Initializable {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         isbnColumn.setCellValueFactory(new PropertyValueFactory<>("isbn"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
         docsTable.setEditable(true);
         idColumn.setEditable(false); // k cho chỉnh id
@@ -158,58 +198,38 @@ public class DocumentView implements Initializable {
         // Cho phép chỉnh sửa từng cột và xử lý update khi commit
         titleColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         titleColumn.setOnEditCommit(event -> {
+            String newValue = event.getNewValue().trim();
+            if (newValue.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tiêu đề không được để trống!");
+                docsTable.refresh();
+                return;
+            }
             Document doc = event.getRowValue();
-            doc.setTitle(event.getNewValue());
-            docController.updateDocument(doc);
-            reloadTable();
+            doc.setTitle(newValue);
         });
 
         authorColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         authorColumn.setOnEditCommit(event -> {
+            String newValue = event.getNewValue().trim();
+            if (newValue.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tác giả không được để trống!");
+                docsTable.refresh();
+                return;
+            }
             Document doc = event.getRowValue();
-            doc.setAuthor(event.getNewValue());
-            docController.updateDocument(doc);
-            reloadTable();
+            doc.setAuthor(newValue);
         });
 
         isbnColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         isbnColumn.setOnEditCommit(event -> {
-            Document doc = event.getRowValue();
-            doc.setIsbn(event.getNewValue());
-            docController.updateDocument(doc);
-            reloadTable();
-        });
-
-        categoryColumn.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<UUID>() {
-            @Override
-            public String toString(UUID uuid) {
-                return uuid != null ? uuid.toString() : "";
+            String newValue = event.getNewValue().trim();
+            if (newValue.isEmpty()) {
+                showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "ISBN không được để trống!");
+                docsTable.refresh();
+                return;
             }
-            @Override
-            public UUID fromString(String string) {
-                try {
-                    return UUID.fromString(string.trim());
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        }));
-
-        categoryColumn.setOnEditCommit(event -> {
             Document doc = event.getRowValue();
-            if (event.getNewValue() != null) {
-                doc.setCategoryId(event.getNewValue());
-                docController.updateDocument(doc);
-                reloadTable();
-            }
-        });
-
-        quantityColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        quantityColumn.setOnEditCommit(event -> {
-            Document doc = event.getRowValue();
-            doc.setQuantity(event.getNewValue());
-            docController.updateDocument(doc);
-            reloadTable();
+            doc.setIsbn(newValue);
         });
 
         // Load dữ liệu lần đầu
