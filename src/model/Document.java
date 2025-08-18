@@ -7,28 +7,22 @@ public class Document {
     private String title;
     private String author;
     private String isbn;
-    private UUID category_id;
-    private int quantity;
 
     public Document() {
     }
 
 
-    public Document(String title, String author, String isbn, UUID category_id, int quantity) {
+    public Document(String title, String author, String isbn) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.category_id = category_id;
-        this.quantity = quantity;
     }
 
-    public Document(UUID id, String title, String author, String isbn, UUID category_id, int quantity) {
+    public Document(UUID id, String title, String author, String isbn) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        this.category_id = category_id;
-        this.quantity = quantity;
     }
 
     // Getters
@@ -48,13 +42,6 @@ public class Document {
         return isbn;
     }
 
-    public UUID getCategoryId() {
-        return category_id;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
 
     // Setter
     public void setId(UUID id) {
@@ -73,13 +60,6 @@ public class Document {
         this.isbn = isbn;
     }
 
-    public void setCategoryId(UUID category_id) {
-        this.category_id = category_id;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     @Override
     public String toString() {
@@ -88,8 +68,6 @@ public class Document {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", isbn='" + isbn + '\'' +
-                ", quantity=" + quantity +
-                ", category='" + category_id + '\'' +
                 '}';
     }
 
