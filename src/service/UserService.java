@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import adapter.LocalDateTypeAdapter;
 import adapter.UUIDTypeAdapter;
 import model.User;
 import util.SupabaseClient;
@@ -75,7 +74,7 @@ public class UserService {
     public List<User> getAllUsers() {
         try {
             String json = SupabaseClient.get("/rest/v1/users?select=*");
-            System.out.println(json);
+
 
             Type listType = new TypeToken<List<User>>() {
             }.getType();
@@ -118,6 +117,17 @@ public class UserService {
             return status == 204;
         } catch (Exception e) {
             System.err.println("Lỗi update user: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteUser(UUID id) {
+        try {
+            int status = SupabaseClient.delete("/rest/v1/users?id=eq." + id);
+            return status == 204;
+        } catch (Exception e) {
+            System.out.println(" Lỗi khi xóa người dùng:");
             e.printStackTrace();
             return false;
         }

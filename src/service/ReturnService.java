@@ -48,7 +48,7 @@ public class ReturnService {
         }
     }
 
-    public boolean deleteReturn(int id) {
+    public boolean deleteReturn(UUID id) {
         try {
             int status = SupabaseClient.delete("/rest/v1/returns?id=eq." + id);
             return status == 204;

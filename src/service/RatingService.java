@@ -59,7 +59,7 @@ public class RatingService {
         }
     }
 
-    public boolean deleteRating(int id) {
+    public boolean deleteRating(UUID id) {
         try {
             int status = SupabaseClient.delete("/rest/v1/ratings?id=eq." + id);
             return status == 204;

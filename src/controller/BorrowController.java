@@ -25,7 +25,7 @@ public class BorrowController {
         return borrowRecordService.borrowBook(record);
     }
 
-    public boolean deleteBorrowRecord(int id) {
+    public boolean deleteBorrowRecord(UUID id) {
         return borrowRecordService.deleteBorrow(id);
     }
 }

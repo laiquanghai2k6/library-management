@@ -25,7 +25,7 @@ public class RatingController {
         return ratingService.addRating(rating);
     }
 
-    public boolean deleteRating(int id) {
+    public boolean deleteRating(UUID id) {
         return ratingService.deleteRating(id);
     }
 }
