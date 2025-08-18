@@ -3,6 +3,7 @@ package view;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,23 +19,32 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.BorrowRecord;
 import model.Document;
-import model.ReturnRecord;
 import model.User;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.time.format.DateTimeFormatter;
 import controller.BorrowController;
 import controller.DocumentController;
 import controller.UserController;
 
 public class BorrowView implements Initializable {
+    private static class BorrowData { //class lưu tạm data
+        String userName;
+        String documentTitle;
+        LocalDate borrowDate; 
 
+        BorrowData(String userName, String documentTitle, LocalDate borrowDate) {
+            this.userName = userName;
+            this.documentTitle = documentTitle;
+            this.borrowDate = borrowDate;
+        }
+    }
     private final BorrowController borrowController = new BorrowController();
     private final UserController userController = new UserController();
     private final DocumentController documentController = new DocumentController();
@@ -50,6 +60,7 @@ public class BorrowView implements Initializable {
 
     private PauseTransition bookPause = new PauseTransition(Duration.millis(300));
     private PauseTransition userPause = new PauseTransition(Duration.millis(300));
+
 
     private ObservableList<String> items;
     private ObservableList<String> usersItem;
@@ -136,14 +147,42 @@ public class BorrowView implements Initializable {
 
     @FXML
     public void loadBorrowingList() {
-        borrowingListVBox.getChildren().clear();
-        List<BorrowRecord> borrowings = borrowController.getAllBorrowRecords();
-        for (BorrowRecord borrowRecord : borrowings) {
-            User user = userController.getUserById(borrowRecord.getUser_id());
-            Document document = documentController.getDocumentById(borrowRecord.getDocument_id());
-            addBorrowView(user.getName(), document.getTitle(), borrowRecord.getBorrow_date());
-        }
+        Task<List<BorrowData>> task = new Task<>() {
+            @Override
+            protected List<BorrowData> call() throws Exception {
+                List<BorrowData> list = new ArrayList<>();
+                List<BorrowRecord> borrowings = borrowController.getAllBorrowRecords();
+
+                for (BorrowRecord borrowRecord : borrowings) {
+                    User user = userController.getUserById(borrowRecord.getUser_id());
+                    Document document = documentController.getDocumentById(borrowRecord.getDocument_id());
+
+                    list.add(new BorrowData(
+                            user.getName(),
+                            document.getTitle(),
+                            borrowRecord.getBorrow_date()));
+                }
+                return list;
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            borrowingListVBox.getChildren().clear();
+            for (BorrowData bd : task.getValue()) {
+                addBorrowView(bd.userName, bd.documentTitle, bd.borrowDate);
+            }
+        });
+
+        task.setOnFailed(event -> {
+            Throwable ex = task.getException();
+            showAlert(Alert.AlertType.ERROR, "Lỗi tải danh sách mượn", ex.getMessage());
+        });
+
+        new Thread(task).start();
     }
+
+
+
 
     private void addBorrowView(String username, String bookName, LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -203,7 +242,7 @@ public class BorrowView implements Initializable {
         BorrowRecord borrowRecord = borrowController.getBorrowRecord(documentId, userId);
         if (borrowRecord != null) {
             showAlert(Alert.AlertType.ERROR, "Đã có người mượn sách",
-                    username+" đã mượn sách " + bookText);
+                    username + " đã mượn sách " + bookText);
             return;
         }
 
@@ -220,7 +259,7 @@ public class BorrowView implements Initializable {
             showAlert(Alert.AlertType.INFORMATION, "Thành công",
                     "Mượn sách thành công: " + bookText +
                             " bởi " + username);
-            addBorrowView(username,bookText,currentDate);
+            addBorrowView(username, bookText, currentDate);
             // Xoá field sau khi submit
             bookNameComboBox.getEditor().clear();
             usersComboBox.getEditor().clear();

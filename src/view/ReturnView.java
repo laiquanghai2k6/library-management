@@ -1,8 +1,10 @@
 package view;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +30,7 @@ import model.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -139,12 +142,42 @@ public class ReturnView {
     }
 
     private void loadAllReviews() {
-        reviewListVBox.getChildren().clear();
-        List<Rating> ratings = ratingController.getAllRatings();
-        for (Rating rating : ratings) {
-            User user = userController.getUserById(rating.getUser_id());
-            Document document = documentController.getDocumentById(rating.getDocument_id());
-            addReview(user.getName(), rating.getComment(), document.getTitle());
+        Task<List<ReviewData>> task = new Task<>() {
+            @Override
+            protected List<ReviewData> call() throws Exception {
+                List<ReviewData> list = new ArrayList<>();
+                for (Rating rating : ratingController.getAllRatings()) {
+                    User user = userController.getUserById(rating.getUser_id());
+                    Document doc = documentController.getDocumentById(rating.getDocument_id());
+                    list.add(new ReviewData(user.getName(), rating.getComment(), doc.getTitle()));
+                }
+                return list; // trả dữ liệu, không update UI 
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            reviewListVBox.getChildren().clear();
+            for (ReviewData rd : task.getValue()) {
+                addReview(rd.userName, rd.comment, rd.documentTitle);
+            }
+        });
+
+        task.setOnFailed(e -> showAlert(Alert.AlertType.ERROR, "Lỗi tải đánh giá", task.getException().getMessage()));
+
+        new Thread(task).start();
+
+    }
+
+    // Lớp hỗ trợ lưu tạm dữ liệu review
+    private static class ReviewData {
+        String userName;
+        String comment;
+        String documentTitle;
+
+        ReviewData(String userName, String comment, String documentTitle) {
+            this.userName = userName;
+            this.comment = comment;
+            this.documentTitle = documentTitle;
         }
     }
 

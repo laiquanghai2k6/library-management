@@ -1,5 +1,6 @@
 package view;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,9 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.IntegerStringConverter;
-import java.util.UUID;
-import javafx.util.StringConverter;
+
 
 public class DocumentView implements Initializable {
 
@@ -71,45 +70,37 @@ public class DocumentView implements Initializable {
 
     @FXML
     void add(ActionEvent event) {
-        if (title.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tiêu đề không được để trống!");
+
+        String t = title.getText().trim();
+        String a = author.getText().trim();
+        String i = isbn.getText().trim();
+
+        if (t.isEmpty() || a.isEmpty() || i.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Vui lòng điền đủ thông tin!");
             return;
         }
 
-        if (author.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "Tác giả không được để trống!");
-            return;
-        }
-
-        if (isbn.getText().trim().isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Lỗi nhập liệu", "ISBN không được để trống!");
-            return;
-        }
-        try {
-            boolean success = docController.addDocument(
-                    new Document(title.getText(), author.getText(), isbn.getText()));
-
-            if (success) {
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Thành công");
-                alert.setHeaderText(null);
-                alert.setContentText("Thêm tài liệu thành công!");
-                alert.showAndWait();
+        Task<Boolean> task = new Task<>() {
+            @Override
+            protected Boolean call() {
+                return docController.addDocument(new Document(t, a, i));
+            }
+        };
+        task.setOnSucceeded(e -> {
+            if (task.getValue()) {
+                showAlert(Alert.AlertType.INFORMATION, "Thành công", "Thêm tài liệu thành công!");
                 loadDocsToListView();
             } else {
-                showError("Không thể thêm tài liệu", "Vui lòng kiểm tra lại dữ liệu và thử lại.");
+                showAlert(Alert.AlertType.ERROR, "Lỗi", "Không thể thêm tài liệu.");
             }
-        } catch (NumberFormatException e) {
-            showError("Lỗi nhập liệu", "Số lượng phải là số nguyên!");
-        }
-    }
+        });
 
-    private void showError(String header, String content) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Lỗi");
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        alert.showAndWait();
+        task.setOnFailed(e -> {
+            showAlert(Alert.AlertType.ERROR, "Lỗi", task.getException().getMessage());
+        });
+
+        new Thread(task).start();
+
     }
 
     @FXML
@@ -237,13 +228,23 @@ public class DocumentView implements Initializable {
     }
 
     private void loadDocsToListView() {
-        docsTable.getItems().clear();
-        List<Document> docs = docController.getAllDocuments();
-        docsTable.getItems().addAll(docs);
-    }
+        Task<List<Document>> task = new Task<>() {
+            @Override
+            protected List<Document> call() throws Exception {
+                return docController.getAllDocuments(); // api
+            }
+        };
 
-    private void reloadTable() {
-        loadDocsToListView();
+        task.setOnSucceeded(event -> {
+            docsTable.getItems().clear();
+            docsTable.getItems().addAll(task.getValue());
+        });
+
+        task.setOnFailed(event -> {
+            showAlert(Alert.AlertType.ERROR, "Lỗi tải dữ liệu", task.getException().getMessage());
+        });
+
+        new Thread(task).start();
     }
 
     public void Back(ActionEvent event) throws IOException {

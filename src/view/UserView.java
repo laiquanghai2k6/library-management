@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import java.util.UUID;
 
 import controller.UserController;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.TableColumn;
@@ -218,8 +218,24 @@ public class UserView implements Initializable {
 
     @FXML
     public void loadUsersToListView() {
-        userTable.getItems().clear();
-        List<User> users = userController.getAllUsers();
-        userTable.getItems().addAll(users);
+        Task<List<User>> task = new Task<>() {
+            @Override
+            protected List<User> call() throws Exception {
+                return userController.getAllUsers();
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            userTable.getItems().clear();
+            userTable.getItems().addAll(task.getValue());
+        });
+
+        task.setOnFailed(event -> {
+            Throwable ex = task.getException();
+            showAlert(Alert.AlertType.ERROR, "Lỗi tải danh sách người dùng", ex.getMessage());
+        });
+
+        new Thread(task).start();
     }
+
 }
