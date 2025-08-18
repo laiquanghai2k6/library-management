@@ -60,7 +60,7 @@
 ```bash
 # Clone repo
 git clone https://github.com/laiquanghai2k6/library-management.git
-cd library-management.git
+cd library-management
 
 # Chạy project (nên chạy file .bat bằng cmd terminal)
 load-env
